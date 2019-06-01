@@ -1,5 +1,24 @@
 <div class="container">
-  <h1 class="title">
-    Weather check electron
-  </h1>
+  <div class="app-head">
+    <h2 class="title">
+      Select your city to check the weather
+    </h2>
+  </div>
+  <div class="basic-container">
+    <p>
+      <mat-form-field>
+        <mat-label>Select a city</mat-label>
+        <input matInput placeholder="State" aria-label="State" [matAutocomplete]="auto" [formControl]="bankCtrl" [(ngModel)]="bankCtrl.name">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "selectCityForWeatherCheck($event)">
+          <mat-option *ngFor="let bank of filteredBanks | async" [value]="bank">
+            {{bank.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </p>
+    <p>
+      Selected city: {{bankCtrl.value?.name}}
+    </p>
+  </div>
 </div>
+
