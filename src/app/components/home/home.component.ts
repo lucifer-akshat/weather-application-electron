@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
-  cityValue: any;
+  selectedCityName: any;
 
   ngOnInit() {
     // set initial selection
@@ -89,7 +89,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       name: event.option.value.name,
       id: event.option.value.id
     };
-    this.cityValue = selectedCity;
+    this.bankCtrl.setValue(selectedCity.name);
+    this.selectedCityName = selectedCity.name;
   }
 
   /**
@@ -105,7 +106,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         // this needs to be done after the filteredBanks are loaded initially
         // and after the mat-option elements are available
         // this.singleSelect.compareWith = (a: Bank, b: Bank) => a.id === b.id;
-        this.cityValue = this.banks[10].name;
+        this.bankCtrl.setValue(this.banks[10].name);
+        this.selectedCityName = this.banks[10].name;
       });
   }
 
