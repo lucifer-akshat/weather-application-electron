@@ -7,6 +7,7 @@ import {MatSelect} from '@angular/material';
 import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
+import { WeatherApiService } from '../../weather-api.service';
 
 interface Bank {
   id: string;
@@ -20,7 +21,9 @@ interface Bank {
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  constructor() { }
+  constructor(
+    private apiService: WeatherApiService
+  ) { }
 
   version = VERSION;
 
@@ -57,6 +60,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
   selectedCityName: any;
+  weatherData: any;
 
   ngOnInit() {
     // set initial selection
@@ -91,6 +95,15 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     this.bankCtrl.setValue(selectedCity.name);
     this.selectedCityName = selectedCity.name;
+    this.apiService.fetchWeatherDetails(selectedCity.name).subscribe( response => {
+      console.log(response);
+      this.weatherData = response;
+      if (this.weatherData !== null && this.weatherData.weather[0].description === 'scattered clouds') {
+        console.log(response);
+        const container = document.getElementById('container');
+          container.classList.add('scattered-clouds');
+      }
+    });
   }
 
   /**
