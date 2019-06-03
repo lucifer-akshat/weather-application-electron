@@ -7,6 +7,7 @@ import {MatSelect} from '@angular/material';
 import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
+import { WeatherApiService } from '../../weather-api.service';
 
 interface Bank {
   id: string;
@@ -20,7 +21,9 @@ interface Bank {
 })
 export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  constructor() { }
+  constructor(
+    private apiService: WeatherApiService
+  ) { }
 
   version = VERSION;
 
@@ -56,7 +59,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
-  cityValue: any;
+  selectedCityName: any;
+  weatherData: any;
 
   ngOnInit() {
     // set initial selection
@@ -89,7 +93,17 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
       name: event.option.value.name,
       id: event.option.value.id
     };
-    this.cityValue = selectedCity;
+    this.bankCtrl.setValue(selectedCity.name);
+    this.selectedCityName = selectedCity.name;
+    this.apiService.fetchWeatherDetails(selectedCity.name).subscribe( response => {
+      console.log(response);
+      this.weatherData = response;
+      if (this.weatherData !== null && this.weatherData.weather[0].description === 'scattered clouds') {
+        console.log(response);
+        const container = document.getElementById('container');
+          container.classList.add('scattered-clouds');
+      }
+    });
   }
 
   /**
@@ -105,7 +119,8 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         // this needs to be done after the filteredBanks are loaded initially
         // and after the mat-option elements are available
         // this.singleSelect.compareWith = (a: Bank, b: Bank) => a.id === b.id;
-        this.cityValue = this.banks[10].name;
+        this.bankCtrl.setValue(this.banks[10].name);
+        this.selectedCityName = this.banks[10].name;
       });
   }
 

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" id="container">
   <div class="app-head">
     <h2 class="title">
       Select your city to check the weather
@@ -8,7 +8,7 @@
     <p>
       <mat-form-field>
         <mat-label>Select a city</mat-label>
-        <input matInput placeholder="State" aria-label="State" [matAutocomplete]="auto" [formControl]="bankCtrl" [(ngModel)]="bankCtrl.name">
+        <input matInput placeholder="State" aria-label="State" [matAutocomplete]="auto" [formControl]="bankCtrl">
         <mat-autocomplete #auto="matAutocomplete" (optionSelected) = "selectCityForWeatherCheck($event)">
           <mat-option *ngFor="let bank of filteredBanks | async" [value]="bank">
             {{bank.name}}
@@ -17,7 +17,7 @@
       </mat-form-field>
     </p>
     <p>
-      Selected city: {{bankCtrl.value?.name}}
+      Selected city: {{selectedCityName}}
     </p>
   </div>
 </div>
